@@ -74,6 +74,8 @@ When the user types `/design-log lite` (or asks for a "light/quick design log"),
 
 **STOP. Do not implement anything.** Steps: A0 Branch Setup → A1 Check Existing Logs → A2 Light Codebase Pre-Scan → A3 Ask Clarifying Questions via `AskUserQuestion` (usually 5+) → A4 Wait for answers. Full procedure in `references/protocol-detail.md` § Phase A.
 
+> **A3 questions must be in simple English (MANDATORY).** Assume the person answering is the product owner, not a specialist in every domain the log touches, and may not be a native English speaker. Every question, option label, and option description uses plain everyday words and **no unexplained jargon or acronyms** (`SSR`, `debounce`, `idempotent`, `optimistic update`, `webhook`, `race condition`, framework/pattern names). Ask about the **visible effect** — what the user or the data will experience — not the technique that produces it. One decision per question; state the trade-off in each option's description. If a term is truly unavoidable, gloss it in plain English on the spot. Before sending, re-read each question: could someone outside this codebase answer it correctly? If not, rewrite. **This applies to the questions only** — the design log, research, and plan stay technical. Rewrite examples in `references/protocol-detail.md` § A3.
+
 > **A0 DL-number reservation (if your repo uses it):** some repos reserve the design-log number with a script that lives **outside the repo** (so it survives repo cleanups) — e.g. `~/.claude/scripts/reserve-dl-number.sh`. If your setup has one, run it from the repo root and do NOT improvise raw `git push` claims. Configure the script path and per-repo rules (branch rename vs `slice/*`, default branch) in `references/protocol-detail.md` § Phase A A0 — load it before reserving. If no script exists, fall back to the manual numbering in that reference.
 
 ### Phase B — Research
@@ -124,7 +126,7 @@ Do not leave template placeholders such as `[Question]`, `[Key takeaway]`, or `T
 ## Critical Rules
 
 1. **NEVER implement before approval** — `[DRAFT]` means no coding.
-2. **ALWAYS ask clarifying questions first** — understanding before action. If the user invoked `/design-log` explicitly, Auto Mode does NOT override this. To skip, state the reason out loud and wait for confirmation.
+2. **ALWAYS ask clarifying questions first, in simple English** — understanding before action, and the user must be able to understand the question. No unexplained jargon or acronyms (see § Phase A). If the user invoked `/design-log` explicitly, Auto Mode does NOT override this. To skip, state the reason out loud and wait for confirmation.
 3. **ALWAYS research before designing** — knowledge before architecture.
 4. **ONE approval gate** — `ExitPlanMode` is the single approval for both plan and design log.
 5. **ALWAYS save a design log file** — plan mode is ephemeral, the log persists.
@@ -159,6 +161,7 @@ Run after the skill completes — any "no" means a skipped phase (full version: 
 
 - Was the Pre-Phase-A relevance grep dispatched and its "Related prior DLs" list surfaced?
 - Were Phase A clarifying questions asked and answered (or an explicit skip confirmed by the user)?
+- Were the Phase A questions written in simple English — no unexplained jargon or acronyms, and answerable by someone outside this codebase?
 - Was Phase B research done via a research MCP with a date-anchored filter, and the research index updated?
 - Was `EnterPlanMode` the first Phase C tool call, and the DL file saved as `[DRAFT]` inside plan mode?
 - Was `ExitPlanMode` the single approval gate — no coding before it, no second approval after it?
