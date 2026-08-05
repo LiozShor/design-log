@@ -7,6 +7,7 @@
   "expected_behavior": [
     "Dispatches the Pre-Phase-A relevance grep to an explore/haiku subagent with task-derived search terms (including Hebrew UI labels) and surfaces a 'Related prior DLs' list",
     "Asks Phase A clarifying questions via AskUserQuestion and waits — does not skip because the task 'seems specific'",
+    "Phrases those questions in simple English — plain words, no unexplained jargon or acronyms, asking about the visible effect rather than the implementation technique",
     "Runs Bash date +%Y-%m-%d before any research MCP call, and uses Tavily/Exa/Firecrawl (not WebSearch/WebFetch)",
     "Calls EnterPlanMode as the FIRST Phase C tool call, creates the DL file with [DRAFT] status inside plan mode, then ExitPlanMode as the single approval gate",
     "Does not write any implementation code before ExitPlanMode approval"

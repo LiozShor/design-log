@@ -6,6 +6,7 @@
   "files": [],
   "expected_behavior": [
     "Runs Lite Mode: 2-3 clarifying questions instead of 5+, compressed template Sections 3-5",
+    "Phrases those questions in simple English — plain words, no unexplained jargon or acronyms, asking about the visible effect rather than the implementation technique",
     "Checks .agent/design-logs/research-index.md first — a <90-day domain entry satisfies Phase B with zero new searches (delta research only)",
     "All hard gates still apply: branch setup (A0), EnterPlanMode before exploration, DL file saved as [DRAFT], ExitPlanMode single approval, Phase E handoff",
     "Does not treat 'lite' as permission to skip Phase A entirely or to self-approve"

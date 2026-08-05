@@ -56,7 +56,31 @@ Before designing anything, do a quick reuse scan to find existing solutions in t
 - Mark the recommended option with "(Recommended)" suffix.
 - Questions must be specific, not generic.
 - Bad: "How do you want this?"
-- Good: "Should the automation trigger on 'Status Changed' or on a scheduled interval?"
+- Good: "When someone changes a task's status, should the update run right away, or once every hour?"
+
+#### Write the questions in simple English (MANDATORY)
+
+Assume the person answering is the product owner, not a specialist in every domain the log touches, and possibly not a native English speaker. A question they cannot decode is a question they cannot answer — it produces a guessed answer, and the whole design is then built on that guess.
+
+Rules for **every** question, option label, and option description:
+
+- **Plain, everyday English.** Short sentences. Common words. Say "runs by itself" instead of "is triggered idempotently."
+- **No unexplained jargon or abbreviations** — not framework names, not pattern names, not acronyms (`SSR`, `CQRS`, `debounce`, `idempotent`, `race condition`, `optimistic update`, `webhook`). If a term is genuinely unavoidable, write it once with a plain-English gloss right after it, e.g. "a webhook (a message one system sends another the moment something happens)".
+- **Describe the visible effect, not the implementation.** Ask what the user or the data will experience, not which technique produces it.
+- **One decision per question.** Never bundle two choices into one.
+- **Say the trade-off in each option's description** — what he gains, what it costs. One short sentence, in the same plain English.
+- **Self-check before sending:** re-read each question and ask "could someone outside this codebase, with no background in this domain, answer it correctly?" If no, rewrite it.
+
+Rewrite examples:
+
+| ❌ Jargon | ✅ Simple English |
+|---|---|
+| "Should the sync be optimistic or pessimistic?" | "When you press Save, should the screen update instantly and fix itself if the save fails, or wait until the save is confirmed?" |
+| "Debounce the search input or fire on every keystroke?" | "Should the search run on every letter you type, or wait until you stop typing for a moment?" |
+| "Do we need idempotency keys on the webhook handler?" | "If the same message arrives twice, should the system ignore the copy, or process it again?" |
+| "Soft-delete or hard-delete the record?" | "When a row is deleted, should it be hidden but recoverable, or erased for good?" |
+
+This rule applies to the questions **only**. The design log itself, the research section, and the plan stay technical and precise — do not dumb those down.
 
 ### A4 — Wait for user answers before proceeding
 
@@ -306,6 +330,7 @@ Triggered by `/design-log lite` (or a request for a "light/quick design log"). S
 Self-check after the skill runs. If any answer is "no" you skipped a phase:
 
 - [ ] **Phase A:** Asked decision-shaping clarifying questions via `AskUserQuestion` (not plain text), usually 5+ (2–3 in lite mode) unless prior context answered enough, and waited for answers?
+- [ ] **Phase A (HARD):** Were those questions written in **simple English** — plain everyday words, no unexplained jargon/acronyms, asking about the visible effect rather than the technique, one decision per question, trade-off stated in each option? A question the user cannot decode = FAIL.
 - [ ] **Phase A (HARD):** Ran the A1 relevance grep — task-derived search terms (incl. Hebrew UI labels) across `INDEX.md` + `ARCHIVE-INDEX.md` + **all DL bodies**; read any related prior DL in full and cited it in the new DL's Related Logs; surfaced findings to the user before A3 questions. **A recency summary ("last N logs") alone = FAIL.**
 - [ ] **Phase A:** Codebase pre-scan done — existing solutions/reuse opportunities surfaced?
 - [ ] **Phase B:** 3+ research sources cited via a research MCP (NOT `WebSearch`/`WebFetch`), OR a fresh research-index hit with delta research; time-boxed to 5–10 min? Research index updated afterward?
