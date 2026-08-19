@@ -17,8 +17,8 @@ config/env and ships a `*.example` template.
 | **[tally](tally/)** | Build and edit [Tally](https://tally.so) forms through the Tally MCP — blocks, pages, conditional logic, mentions/recall. | Mentions Tally, a form, or a form ID |
 | **[tech-researcher](tech-researcher/)** | Compare libraries/frameworks/tools and verify current APIs against live sources before choosing or implementing. | "X vs Y", "is it deprecated?", "latest API" |
 | **[find-session](find-session/)** | Search Claude Code's local session logs for a past conversation and return resume instructions. | "find the session where we…", "I closed my session" |
-| **[git-ship](git-ship/)** | A safe single entry point for git writes — branch guard, multi-tab/worktree safety, conventional commits, ask-before-push, worktree-safe merge. | "ship it", "commit", "push" |
-| **[visualize](visualize/)** | Turn conversation content or data into a self-contained single-file HTML visualization (deck, dashboard, one-pager, chart, etc.). | "visualize this", "make a deck/dashboard" |
+| **[git-ship](git-ship/)** | A safe single entry point for git writes — branch guard, explicit-path staging (never `git add -A`), conventional commits, ask-before-push, rebase-before-main, an adversarial review gate before merge, and post-deploy verification. | "ship it", "commit", "push" |
+| **[visualize](visualize/)** | Turn conversation content or data into a self-contained single-file HTML visualization (deck, dashboard, one-pager, chart, etc.) — grounded in the real design when the subject already exists, served over localhost and verified in a browser before hand-off. | "visualize this", "make a deck/dashboard" |
 | **[skills-build](skills-build/)** | Build a NEW agent skill from a real repeated workflow — decide if it deserves a skill, scaffold `SKILL.md`, validate structure. | "create a skill", "scaffold a SKILL.md" |
 | **[skill-improver](skill-improver/)** | Review or improve an EXISTING skill — structure, triggers, permissions, splitting, eval coverage. | "review this skill", "improve my skill" |
 

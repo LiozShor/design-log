@@ -1,6 +1,6 @@
 ---
 name: airtable
-description: 'Read or write Airtable records — bases, tbl/rec/fld IDs, filterByFormula, pyairtable. Not for n8n workflows or Google Sheets/Excel.'
+description: "Read or write Airtable data — bases, tables, `tbl…`/`rec…`/`fld…` IDs, `filterByFormula` syntax, field types and their coercion rules, batch limits, and the Meta API's boundaries. Covers the MCP tools, the REST API, and pyairtable. Triggers: 'read the Airtable records', 'update this base', 'what is the filterByFormula for…', 'add a field', 'why did my typecast not create the option', 'list the tables in this base'. Do NOT use for n8n workflows that happen to contain Airtable nodes, or for Google Sheets or Excel."
 allowed-tools: Bash, Read
 ---
 

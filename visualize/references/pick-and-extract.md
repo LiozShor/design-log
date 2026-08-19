@@ -9,6 +9,16 @@ Trigger this pattern when the user says any of: "let me pick on the HTML", "I wa
 back", "make the options selectable", "extract my choice to you", or whenever you're rendering candidate
 options for a decision the user will hand back to you.
 
+## Before any of this: render the options in the REAL design
+
+If these options are variants of something that already exists in the user's product, read its actual
+source first and build every card on the real thing — real CSS custom properties, real fonts, real
+strings, real `dir`. See "Ground in the current implementation" in SKILL.md. Options rendered in an
+invented design can't be judged for fit and can't be implemented as picked.
+
+Concretely, that means the first card in each group is today's version — labeled "current", marked
+`.no-pick`, not clickable — and every other card differs from it on the decision axis alone.
+
 ## The four required pieces
 
 1. **Selectable cards** — each option card is clickable; selecting one in a group deselects its siblings
@@ -26,7 +36,14 @@ can't express "I don't want this tier at all."
 
 ## Copy/clipboard robustness
 
-`file://` pages often block `navigator.clipboard`. Always provide BOTH paths and a manual fallback:
+**Serve the page over localhost** (`python3 -m http.server 8899` in the output directory, then open
+`http://127.0.0.1:8899/<name>.html`). This is the single most effective fix: `navigator.clipboard` is
+blocked outright on `file://`, so a Pick-and-Extract page opened as a file looks perfect and then does
+nothing when the user clicks copy — the one interaction the whole page exists for. See the skill's
+"Serving and verifying" section.
+
+Localhost is the fix, but keep the fallbacks anyway — the user may re-open the saved file directly
+later. Always provide BOTH copy paths and a manual fallback:
 
 ```javascript
 function copyText(){

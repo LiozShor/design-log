@@ -1,6 +1,6 @@
 ---
 name: git-ship
-description: 'Commit and optionally push. MANDATORY before any git write — commit, push, merge, rebase, reset, branch -d. Triggers: ship it, commit, push.'
+description: 'Commit and optionally push. MANDATORY before any git write — commit, push, merge, rebase, reset, branch -d. Triggers: ship it, commit, push. Do NOT enter here when the request also includes deploying and live-verifying the change ("deploy, push, delete the branch", "deploy and close it out", "run the browser tests and ship it") — that whole sequence belongs to your deploy-and-verify skill, which calls this one for the git mechanics.'
 allowed-tools: Bash
 ---
 # Git Ship
@@ -31,11 +31,39 @@ This skill is the ONLY entry point for git write operations in this project. Bef
 4. Verify the commit will only include files relevant to the current task.
 
 ## Workflow
-1. Run `git status` to see all changes
-2. Run `git diff --staged` (if nothing staged, run `git add -A` first — but only after pre-ship validation passes)
-3. Generate a conventional commit message: type(scope): description
-4. Commit with the generated message
-5. Ask the user: "Push to remote?" — only push if they confirm
+1. Run `git status --porcelain` to see all changes.
+2. **Stage explicit paths only. NEVER `git add -A` / `git add .` / `git add --all`** — a blanket add sweeps in a parallel session's work (this has happened: ~16 foreign files in one commit). Instead:
+   - Derive the list of paths belonging to THIS task from the porcelain output.
+   - **Show the user that exact file list** before staging.
+   - Stage them by path: `git add path/one path/two`.
+   - Any dirty file not on the list: name it and ask — do not stage, do not stash it unilaterally.
+   - If a PreToolUse hook blocking blanket adds is installed, and it fires, fix the command; do not route around it.
+3. Run `git diff --staged` and confirm the staged set matches the list you showed.
+4. Generate a conventional commit message: `type(scope): description` (under 72 chars).
+5. Commit. **If amending, verify with `git log -1 --stat`** that the amend replaced the commit rather than stacking a new one.
+6. Ask the user: "Push to remote?" — only push if they confirm.
+7. **Before any push that lands on main, run `git fetch && git rebase origin/main` first.** On conflict, stop and show it — a parallel session may have pushed conflicting docs.
+
+## Adversarial Review Gate (before merge to main)
+Before merging to main, dispatch **one read-only reviewer subagent** over the diff. It is what catches cross-seam bugs that a serial implementation pass misses.
+
+- Agent type `general-purpose`, **`model="sonnet"`** — this is structured multi-file analysis, not top-tier reasoning work.
+- Give it the changed-file list and the diff, and tell it to **read the files fresh with no assumptions from this conversation**.
+- Ask it to report **violations only** — no praise, no summary:
+  - tests asserting invented values that don't exist in the type definitions or fixtures
+  - stale references to removed systems / dead code paths
+  - conventions in `CLAUDE.md` or the repo that the diff breaks
+  - hardcoded config values (ids, URLs, keys, emails, machine paths)
+- Surface its findings to the user before merging. Do not auto-fix and merge silently.
+
+## Post-Deploy Verification
+A push is not a deploy, and a deploy is not "live". If this ship includes a deploy:
+- Poll the build/deployment status until it actually reports success — never infer success from a clean push (a stalled GitHub Pages build once left a "shipped" change undeployed).
+- Then curl the URL / query the prod table / screenshot the page, and **paste the evidence**.
+- If your setup has a dedicated deploy-and-verify skill, delegate this to it instead of hand-rolling it.
+
+## Final Report
+Max 5 bullets: what was staged, the commit, push/merge status, deploy evidence, anything left open. No preamble.
 
 ## Post-Push Housekeeping (Before Merge)
 After successful push, if there are any pending file updates (e.g., `.agent/current-status.md`, design log status), do them NOW — while still on the feature branch. Commit and push again if needed. The branch-guard hook blocks all edits on main.

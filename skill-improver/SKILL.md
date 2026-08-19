@@ -1,6 +1,6 @@
 ---
 name: skill-improver
-description: 'Review or improve an existing agent skill (SKILL.md structure, triggers, permissions, splitting). Not for new skills — use skills-build.'
+description: "Review, audit, or improve ONE existing agent skill: SKILL.md structure against the eight required sections, description quality and routing collisions, `allowed-tools` scope, the 300-line ceiling, dead files under references/assets/scripts, and eval coverage. Ships `scripts/review-skill-structure.sh` for one skill and `scripts/survey-skill-fleet.sh` for a whole tree. Triggers: 'review this skill', 'audit my skills', 'is this SKILL.md any good', 'why does the wrong skill keep triggering', 'split this skill', 'my skill is too long'. Do NOT use to build a brand-new skill from a repeated workflow — that is `skills-build`; or to find and install someone else's skill."
 allowed-tools: Read, Edit, Grep, Glob, Bash
 ---
 
