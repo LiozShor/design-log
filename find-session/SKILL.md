@@ -12,8 +12,8 @@ Search Claude Code's local session logs (`~/.claude/projects/**/*.jsonl`) for a 
 
 - "I closed / accidentally quit my session, help me find it."
 - "Which session did we discuss / fix / build X in?"
-- "Find the session where we worked on DL-316 / the wf05 bug / the app switcher."
-- "Where did the AR agent and the periodic agent talk to each other?" (cross-project conversations count).
+- "Find the session where we worked on DL-142 / the upload bug / the nav redesign."
+- "Where did the two project agents talk to each other?" (cross-project conversations count).
 - Any request to locate a past Claude Code conversation by topic, error text, file, or feature so it can be resumed or referenced.
 
 ## When this does not trigger
@@ -25,7 +25,7 @@ Search Claude Code's local session logs (`~/.claude/projects/**/*.jsonl`) for a 
 
 ## Required inputs
 
-- A search hint: a distinctive phrase, error message, feature name, DL number, file path, or topic. Shorter and more distinctive beats vague ("preview load failed", "DL-316 react port", "periodic agent" > "that bug we fixed").
+- A search hint: a distinctive phrase, error message, feature name, DL number, file path, or topic. Shorter and more distinctive beats vague ("preview load failed", "DL-142 react port", an agent or feature name > "that bug we fixed").
 - If no hint is given, ask for one before searching. If the user only has a rough time ("this morning", "just now"), that alone is enough to rank by mtime — proceed.
 
 ## Where sessions live
@@ -48,7 +48,7 @@ ls -lt ~/.claude/projects/*/*.jsonl | head -20
 Use Python over the jsonl (faster and structured). For each candidate file:
 
 - **User-message match** — check `type == "user"` content for the hint. Verbatim error strings and DL numbers appear in user messages and are gold.
-- **Whole-file distinctive-term count** — for cross-cutting topics, `grep`/count a distinctive term across ALL lines (user + assistant + tool output). A term that appears many times (e.g. `periodic agent` ×33) is a strong ranking signal *even when the individual hits aren't in user messages*. Use this when the topic is a running thread, not a single pasted string.
+- **Whole-file distinctive-term count** — for cross-cutting topics, `grep`/count a distinctive term across ALL lines (user + assistant + tool output). A term that appears many times (e.g. a distinctive agent or feature name ×33) is a strong ranking signal *even when the individual hits aren't in user messages*. Use this when the topic is a running thread, not a single pasted string.
 
 Prefer literal-substring first, then loosen. Hebrew terms match exactly — don't transliterate.
 

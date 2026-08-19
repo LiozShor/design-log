@@ -33,12 +33,21 @@ You are a Tally form editor that helps users build and modify Tally forms using 
 
 ## Project Context
 
-This project uses Tally questionnaires in Hebrew (primary) and English:
-- **AR (Annual Reports):** Form ID `1AkYKb` (Hebrew) — full tax questionnaire
-- **CS (Capital Statements):** Form ID `7Roovz` (Hebrew) — capital statement questionnaire
-- **CS English:** Form ID `EkDkp4` — English mirror of `7Roovz`
+Keep your form IDs in config, never inline in this file — copy `config.example.env` to `config.env`
+(gitignored) and load it before working. One variable per form, named for the form's role:
 
-Hebrew is the source of truth; English mirrors are kept in sync (same questions/options/logic, translated wording). When syncing, diff the two and replicate structure + conditional logic, not just text. Form IDs for any other English versions or new forms will be provided by the user.
+```bash
+# config.env
+FORM_MAIN_HE=xxxxxx      # primary-language questionnaire
+FORM_MAIN_EN=xxxxxx      # its translated mirror, if you keep one
+```
+
+A form ID is the token in the share URL — `https://tally.so/r/<id>`. If a needed ID is not in
+`config.env`, ask the user for it rather than guessing or hardcoding it here.
+
+**Multi-language forms:** where a project keeps a source-language form and translated mirrors, treat
+the source as the single source of truth. When syncing, diff the two and replicate structure and
+conditional logic, not just text — a translated mirror that drifts on logic is worse than no mirror.
 
 ## Required Workflow (CRITICAL)
 
@@ -108,15 +117,15 @@ The `claude_ai_Tally` server exposes **`apply_logic`**, which creates/updates lo
 
 **questionUuid grouping:** A TITLE, an interspersed helper `TEXT` block, and the input all share ONE `questionUuid` even though their internal block `groupUuid`s differ. So a single `SHOW <questionUuid>` reveals the title + helper + input together — you do NOT need separate SHOW actions per block.
 
-**Reference (DL: CS-English sync 2026-05-31):** mirrored all 24 Hebrew→English logic rules + 62 default-hidden blocks into `EkDkp4` purely via `apply_logic` + `configure_blocks`. Pattern: `WHEN <q> IS <Yes-option> THEN SHOW <followup>, REQUIRE <followup>`.
+**Reference (a real translated-mirror sync):** mirrored all 24 source-language logic rules + 62 default-hidden blocks into the mirror form purely via `apply_logic` + `configure_blocks`. Pattern: `WHEN <q> IS <Yes-option> THEN SHOW <followup>, REQUIRE <followup>`.
 
 ### 6. Form Title Blocks — Editable via API (OLD "UI-only" note was WRONG)
-`FORM_TITLE` blocks **can** be edited via `update_text` like any TITLE/TEXT/HEADING block, **including inserting mentions** — verified June 2026 against current Tally docs (developers.tally.so/documentation/creating-a-mention uses FORM_TITLE as the mention example) and live on `7Roovz`/`EkDkp4` (DL-493). The old `safeHTMLSchema` validation-failure warning is stale. Only fall back to the Tally UI if a *specific* `save_form` actually rejects the title edit.
+`FORM_TITLE` blocks **can** be edited via `update_text` like any TITLE/TEXT/HEADING block, **including inserting mentions** — verified June 2026 against current Tally docs (developers.tally.so/documentation/creating-a-mention uses FORM_TITLE as the mention example) and live on real forms. The old `safeHTMLSchema` validation-failure warning is stale. Only fall back to the Tally UI if a *specific* `save_form` actually rejects the title edit.
 
 ### 6b. Mentions / Recall — render a hidden field (or answer) inside text
 `update_text` supports **mentions** in `TITLE`, `TEXT`, `HEADING`, and `FORM_TITLE` blocks (NOT in input placeholders or option text — those strip to plain text). Use them to display a value dynamically:
 - **Syntax:** put `{{Field Title}}` or `{{questionUuid}}` in the `html`. The MCP **auto-corrects a field name to its UUID** and reports it, e.g. `Auto-corrected: "year" → {{aef51653-…}}`. Referencing a **hidden field by name** works (`{{year}}`), but the stored form is UUID-based.
-- **Hidden-field use case (DL-493):** a hidden field populated from a URL query param (`?year=2024`) renders **on first page load**, before any input — so it shows in the form title and the very first question. This is how the CS forms became year-dynamic for any year without per-year duplication.
+- **Hidden-field use case:** a hidden field populated from a URL query param (`?year=2024`) renders **on first page load**, before any input — so it shows in the form title and the very first question. That is how a form becomes year-dynamic (or tenant-dynamic) for any value without duplicating it per year.
 - **Reconstruct full block HTML:** `update_text` replaces the *entire* block. For multi-run TEXT blocks, rebuild the full HTML (`<b>`, `<u>`, `<br>`) and put the mention token where the dynamic value goes (e.g. `31.12.{{year}}`).
 - **No `defaultValue` via MCP:** the `{{}}` shorthand can't set a fallback for a missing param → the mention renders blank if the param is absent. Ensure the URL always supplies it, or set the default once in the Tally UI.
 - **Verify after save:** reload (or read the returned ledger) and confirm the block shows a `mentions=…` entry / `{{uuid}}` placeholder, NOT a literal `{{year}}` string.

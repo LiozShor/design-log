@@ -106,7 +106,7 @@ If the merge touched anything under `api/` (Workers code, `wrangler.toml`, `api/
 cd ~/my-project
 bash .claude/workflows/deploy-worker.sh
 ```
-The wrapper clears the stale `CLOUDFLARE_API_TOKEN`, passes `-c wrangler.toml` (autoconfig-hijack guard), and verifies the health endpoint after deploy. Frontend changes under `frontend/` deploy via `bash scripts/deploy-pages.sh "<msg>"` (Pages git auto-deploy is broken — DL-368).
+The wrapper clears the stale `CLOUDFLARE_API_TOKEN`, passes `-c wrangler.toml` (autoconfig-hijack guard), and verifies the health endpoint after deploy. Frontend changes under `frontend/` deploy via `bash scripts/deploy-pages.sh "<msg>"` (when Pages git auto-deploy is unreliable).
 
 ## Closing a Design Log
 After merging a DL branch, run `.claude/workflows/close-design-log.sh <NNN>` from the canonical clone — it patches the DL status header, updates `INDEX.md`, runs the PII guard, and stages the files for a closing commit.

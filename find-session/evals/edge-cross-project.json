@@ -1,5 +1,5 @@
 {
-  "query": "Find where the AR agent and the periodic-report agent talked to each other on an md file",
-  "expected_behavior": "Skill triggers and treats this as a cross-project topic. Searches sibling project dirs (multiple related project worktrees), counts a distinctive term ('the agent name) across whole files, filters skill-boilerplate noise, extracts the shared .md artifact path (e.g. docs/AGENT-THREAD.md), and returns BOTH session ends with their worktree-translated `cd` paths plus the artifact path — naming which end is the origin.",
+  "query": "Find where the two project agents talked to each other on an md file",
+  "expected_behavior": "Skill triggers and treats this as a cross-project topic. Searches sibling project dirs (multiple related project worktrees), counts a distinctive term (the agent name) across whole files, filters skill-boilerplate noise, extracts the shared .md artifact path (e.g. docs/AGENT-THREAD.md), and returns BOTH session ends with their worktree-translated `cd` paths plus the artifact path — naming which end is the origin.",
   "expected_trigger": true
 }
