@@ -2,10 +2,10 @@
   "$schema": "skill-eval/v1",
   "name": "add-conditional-field-to-form",
   "skill": "tally",
-  "query": "In the Tally form 7Roovz, show the 'spouse income' question only when the user answers Yes to 'married'.",
+  "query": "In the Tally form abc123, show the 'spouse income' question only when the user answers Yes to 'married'.",
   "files": [],
   "expected_behavior": [
-    "Calls load_form with formId 7Roovz first to start the editing session",
+    "Calls load_form with formId abc123 first to start the editing session",
     "Default-hides the target field via configure_blocks (visibility isHidden:true) before adding the SHOW rule",
     "Uses apply_logic with a WHEN <questionUuid> IS <optionBlockUuid> THEN SHOW <questionUuid>, REQUIRE <questionUuid> rule, chaining actions with commas not AND",
     "Calls save_form at the end and reports the returned form URL"

@@ -1,5 +1,5 @@
 {
-  "query": "Find the session where we fixed the DL-316 react port bug",
-  "expected_behavior": "Skill triggers. Lists recent .jsonl files across all project dirs including worktrees, searches user messages and whole-file counts for 'DL-316', filters skill-boilerplate lines, ranks by mtime + hit count, and returns a Session/Project dir/Last active/Topic block with a worktree-translated `cd` path and `claude --resume <uuid>`.",
+  "query": "Find the session where we fixed the DL-142 react port bug",
+  "expected_behavior": "Skill triggers. Lists recent .jsonl files across all project dirs including worktrees, searches user messages and whole-file counts for 'DL-142', filters skill-boilerplate lines, ranks by mtime + hit count, and returns a Session/Project dir/Last active/Topic block with a worktree-translated `cd` path and `claude --resume <uuid>`.",
   "expected_trigger": true
 }

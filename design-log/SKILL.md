@@ -1,7 +1,8 @@
 ---
 name: design-log
-description: 'Plan non-trivial features, fixes, refactors, UI/workflow changes before coding — clarify, research, get approval (Stop & Think protocol).'
+description: "Plan non-trivial work BEFORE coding — a feature, a bug fix with architectural reach, a refactor, a UI or workflow change, or anything touching multiple files — via the Stop & Think protocol: clarify the ask, research the current code and prior design logs, state assumptions and edge cases, freeze acceptance criteria and rollback, then get explicit approval. Produces a numbered design log under `.agent/design-logs/`. Triggers: 'plan this', 'design log', 'DL for this', 'how should we build X', 'think this through before coding', or any request whose scope spans several files or changes a data shape, contract, or user-visible flow. Do NOT use for a one-line fix or typo (just do it), for executing an already-approved plan, for comparing libraries or verifying an API (`tech-researcher`), or for committing and shipping finished work (`git-ship`)."
 model: opus
+disable-model-invocation: false
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, mcp__claude_ai_Tavily__tavily_search, mcp__claude_ai_Tavily__tavily_extract, mcp__claude_ai_Tavily__tavily_crawl, mcp__claude_ai_Tavily__tavily_map, mcp__exa__web_search_exa, mcp__exa__web_fetch_exa, mcp__exa__web_search_advanced_exa, mcp__firecrawl__firecrawl_search, mcp__firecrawl__firecrawl_scrape, mcp__firecrawl__firecrawl_crawl, mcp__firecrawl__firecrawl_extract, Agent, Skill, EnterPlanMode, ExitPlanMode, AskUserQuestion
 ---
 
@@ -106,6 +107,10 @@ Steps: status → `[BEING IMPLEMENTED — DL-NNN]` → build per Proposed Soluti
 ### Phase E — Test Handoff
 
 Collect unchecked Section 7 items → write to `current-status.md` Active TODOs in the documented format → mark log `[COMPLETED]` only when all Section 7 items pass. To close: run `bash .claude/workflows/close-design-log.sh <NNN>` — it patches status in both the DL file and INDEX.md, runs the PII guard, and stages the files. Once `[COMPLETED]`, merged, and (if deployed) live-verified, **delete the feature branch** via `git-ship`: verify-merged → detach-if-checked-out → `git branch -D` + `git push origin --delete` (Phase E step 5). Full procedure + format template in `references/protocol-detail.md` § Phase E.
+
+### Approved-Plan Execution Handoff
+
+After `ExitPlanMode` approval, the design log remains the source of truth, but the execution loop may be handed to a milestone-orchestration workflow. Pass forward a concise ledger containing the milestone goal, task list, owner, status, definition of done, validation gates, intended commits, and risks. Do not create a second plan or design document, ask whether to continue between approved tasks, or start the next milestone in the same turn. If no execution skill is available, continue the approved implementation inline with the same ledger discipline.
 
 ### Handling Mid-Implementation Feedback
 
